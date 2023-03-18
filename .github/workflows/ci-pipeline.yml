@@ -50,6 +50,6 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: error-log
-          path: error.log
+          name: failure-log
+          path: failure.log
 
