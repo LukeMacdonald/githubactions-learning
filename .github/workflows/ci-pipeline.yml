@@ -22,4 +22,6 @@ jobs:
           npm install --prefix src
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
+      - name: Perform Lint Testing
+        run: npm run test-lint --prefix src
 
