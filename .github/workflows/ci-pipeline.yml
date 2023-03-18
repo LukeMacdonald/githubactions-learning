@@ -29,7 +29,6 @@ jobs:
       
       - name: Perform Lint Testing
         run: npm run test-lint --prefix src
-        continue-on-error: false
       
       - name: Create log file
         if: failure()
