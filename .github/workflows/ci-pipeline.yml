@@ -44,12 +44,12 @@ jobs:
       
       - name: Integration Testing
         if: success()
-        run: npm run test-integration --prefix src
+        run: npm run test-integration --prefix src 2>&1 | tee error.log
       
       - name: Upload log file
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: failure-log
-          path: failure.log
+          name: error-log
+          path: error.log
 
