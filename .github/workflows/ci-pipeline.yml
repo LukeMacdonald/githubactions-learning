@@ -38,6 +38,7 @@ jobs:
           date_string=$(date +"%Y-%m-%d_%H-%M-%S")
      
       - name: Generate Log File
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: error-log
