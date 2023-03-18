@@ -10,18 +10,37 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      
       - name: Checkout code
         uses: actions/checkout@v3
+      
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: "18"
+      
       - name: Install dependencies
         run: |
           echo Installing dependencies
           npm install --prefix src
+      
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
+      
       - name: Perform Lint Testing
         run: npm run test-lint --prefix src
+        continue-on-error: false
+      
+      - name: Log Errors
+        if: ${{ failure() }}
+        run: |
+          mkdir logs
+          date_string=$(date +"%Y-%m-%d_%H-%M-%S")
+     
+      - name: Generate Log File
+        uses: actions/upload-artifact@v2
+        with:
+          name: error-log
+          path: |
+            logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
 
