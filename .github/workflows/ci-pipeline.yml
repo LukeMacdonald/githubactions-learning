@@ -30,8 +30,6 @@ jobs:
       - name: Perform Lint Testing
         run: | 
           npm run test-lint --prefix src
-          step=$("Perform Lint Testing")
-          message=$("Failed performing Lint Testing")
       
       - name: Create log file
         if: failure()
@@ -40,8 +38,9 @@ jobs:
           echo "---------------------------" >> failure.log
           echo "Date & Time of Failure: $(date)" >> failure.log
           echo "Job: '${{ github.job }}'" >> failure.log
-          echo "Step: '${ step }'" >> failure.log
-          echo "Error message: '${message}'" >> failure.log
+          # TODO: Improve logging for step and error message
+          echo "Step: Perform Lint Testing" >> failure.log
+          echo "Error Message: Workflow failed trying to perform lint testing" >> failure.log
       - name: Upload log file
         if: failure()
         uses: actions/upload-artifact@v2
