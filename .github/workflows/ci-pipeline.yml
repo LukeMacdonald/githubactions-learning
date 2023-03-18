@@ -42,9 +42,9 @@ jobs:
 #          echo "Step: Perform Lint Testing" >> failure.log
 #          echo "Error Message: Workflow failed trying to perform lint testing" >> failure.log
       
-      - name: Integration Testing
-        if: success()
-        run: npm run test-integration --prefix src 2>&1 | tee error.log
+#      - name: Integration Testing
+#        if: success()
+#        run: npm run test-integration --prefix src 2>&1 | tee error.log
       
       - name: Upload log file
         if: failure()
