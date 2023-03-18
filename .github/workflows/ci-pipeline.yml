@@ -28,8 +28,8 @@ jobs:
         run: docker-compose up -d
       
       - name: Perform Lint Testing
-        run: | 
-          npm run test-lint --prefix src 2>&1 | tee error.log
+        run: npm run test-lint --prefix src 2>&1 | tee error.log
+        continue-on-error: false
       
 #      - name: Create log file for linting
 #        if: failure()
