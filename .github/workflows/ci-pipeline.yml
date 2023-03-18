@@ -29,18 +29,18 @@ jobs:
       
       - name: Perform Lint Testing
         run: | 
-          npm run test-lint --prefix src
+          npm run test-lint --prefix src 2>&1 | tee error.log
       
-      - name: Create log file for linting
-        if: failure()
-        run: |
-          echo "Workflow Failure Log" > failure.log
-          echo "---------------------------" >> failure.log
-          echo "Date & Time of Failure: $(date)" >> failure.log
-          echo "Job: '${{ github.job }}'" >> failure.log
-          # TODO: Improve logging for step and error message
-          echo "Step: Perform Lint Testing" >> failure.log
-          echo "Error Message: Workflow failed trying to perform lint testing" >> failure.log
+#      - name: Create log file for linting
+#        if: failure()
+#        run: |
+#          echo "Workflow Failure Log" > failure.log
+#          echo "---------------------------" >> failure.log
+#          echo "Date & Time of Failure: $(date)" >> failure.log
+#          echo "Job: '${{ github.job }}'" >> failure.log
+#          # TODO: Improve logging for step and error message
+#          echo "Step: Perform Lint Testing" >> failure.log
+#          echo "Error Message: Workflow failed trying to perform lint testing" >> failure.log
       
       - name: Integration Testing
         if: success()
