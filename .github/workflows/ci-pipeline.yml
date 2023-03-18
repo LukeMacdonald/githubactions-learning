@@ -37,8 +37,8 @@ jobs:
           echo "Workflow Failure Log" > failure.log
           echo "---------------------------" >> failure.log
           echo "Date & Time of Failure: $(date)" >> failure.log
-          echo "Job: ${{ github.job }} failed at '" >> failure.log
-          echo "Step: '${{ github.step }} 
+          echo "Job: ${{ github.job }}" >> failure.log
+          echo "Step: '${{ github.step }} >> failure.log
       - name: Upload log file
         if: failure()
         uses: actions/upload-artifact@v2
