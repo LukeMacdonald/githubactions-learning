@@ -36,6 +36,9 @@ jobs:
         run: |
           mkdir logs
           date_string=$(date +"%Y-%m-%d_%H-%M-%S")
+          echo "Error log for run ${{ github.run_number }} (${date_string})" > logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
+          echo "----------------------------------------" >> logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
+          echo "Workflow failed when performing Lint testing" >> logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
      
       - name: Generate Log File
         if: ${{ failure() }}
