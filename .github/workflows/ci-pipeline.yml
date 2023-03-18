@@ -43,7 +43,7 @@ jobs:
           echo "Error Message: Workflow failed trying to perform lint testing" >> failure.log
       
       - name: Integration Testing
-        if: successful()
+        if: success()
         run: npm run test-integration --prefix src
       
       - name: Upload log file
