@@ -31,20 +31,17 @@ jobs:
         run: npm run test-lint --prefix src
         continue-on-error: false
       
-      - name: Log Errors
-        if: ${{ failure() }}
+      - name: Create log file
+        if: failure()
         run: |
-          mkdir logs
-          date_string=$(date +"%Y-%m-%d_%H-%M-%S")
-          echo "Error log for run ${{ github.run_number }} (${date_string})" > logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
-          echo "----------------------------------------" >> logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
-          echo "Workflow failed when performing Lint testing" >> logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
-     
-      - name: Generate Log File
-        if: ${{ failure() }}
+          echo "Workflow failed at $(date)" > failure.log
+          echo "Job ${{ github.job }} failed" >> failure.log
+          echo "See the Actions tab for more details" >> failure.log
+
+      - name: Upload log file
+        if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: error-log
-          path: |
-            logs/error_${{ github.run_id }}_${{ github.run_number }}_${date_string}.log
+          name: failure-log
+          path: failure.log
 
