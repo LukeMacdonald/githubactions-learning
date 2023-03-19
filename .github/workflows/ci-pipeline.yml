@@ -109,17 +109,10 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
-#      - name: Update package lists
-#        run: sudo apt-get update
       - name: Install Playwright
         run: |
           cd src
           npx playwright install
-
-      - name: Run MongoDB Docker Container
-        run: docker-compose up -d
-#      - name: Start server
-#        run: npm run start --prefix src &
       - name: E2E Testing
         id: e2e-test
         run: npm run test-e2e --prefix src >> e2e.txt
@@ -129,3 +122,21 @@ jobs:
         with:
           name: e2e-report
           path: e2e.txt
+  deploy:
+    needs: [setup,lint,unit,integration,e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: src/node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --prefix src
+      - name: Deploy
+        run: echo "Deploying"
+
