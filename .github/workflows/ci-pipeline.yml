@@ -109,17 +109,17 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
-      - name: Update package lists
-        run: sudo apt-get update
+#      - name: Update package lists
+#        run: sudo apt-get update
       - name: Install Playwright
         run: |
           cd src
-          npx playwright install --with-deps
+          npx playwright install
 
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
-      - name: Start server
-        run: npm run start --prefix src &
+#      - name: Start server
+#        run: npm run start --prefix src &
       - name: E2E Testing
         id: e2e-test
         run: npm run test-e2e --prefix src >> e2e.txt
