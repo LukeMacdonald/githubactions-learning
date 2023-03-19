@@ -114,6 +114,8 @@ jobs:
           cd src
           npx playwright install
 
+      - name: Start server
+        run: npm run start --prefix src
       - name: E2E Testing
         id: e2e-test
         run: npm run test-e2e --prefix src >> e2e.txt
