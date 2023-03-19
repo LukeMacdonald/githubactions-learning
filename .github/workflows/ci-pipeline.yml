@@ -43,6 +43,29 @@ jobs:
           name: test-report
           path: lint.txt
 
+  unit:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~./npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        run: npm install --prefix src
+      - name: Unit Testing
+        id: unit-test
+        run: npm run test-unit --prefix src >> unit.txt
+      - name: Log Error
+        if: failure() && steps.integration-test.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: unit.txt
+
   integration:
     needs: setup
     runs-on: ubuntu-latest
