@@ -117,5 +117,5 @@ jobs:
         if: failure() && steps.e2e-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
-          name: playwright-report
-          path: playwright-report
+          name: e2e-report
+          path: e2e.txt
