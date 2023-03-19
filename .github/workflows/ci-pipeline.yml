@@ -114,6 +114,8 @@ jobs:
           cd src
           npx playwright install
 
+      - name: Run MongoDB Docker Container
+        run: docker-compose up -d
       - name: Start server
         run: npm run start --prefix src
       - name: E2E Testing
