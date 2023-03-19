@@ -114,7 +114,7 @@ jobs:
       - name: Install Playwright
         run: |
           cd src
-          npx playwright install
+          npx playwright@1.24.1 install
 
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
