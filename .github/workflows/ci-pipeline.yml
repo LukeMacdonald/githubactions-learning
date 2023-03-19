@@ -112,7 +112,7 @@ jobs:
       - name: Install Playwright
         run: |
           cd src
-          npx playwright install --with-deps
+          npx playwright install
 
       - name: E2E Testing
         id: e2e-test
