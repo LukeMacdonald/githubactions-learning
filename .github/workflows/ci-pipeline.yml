@@ -109,6 +109,8 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
+      - name: Update package lists
+        run: sudo apt-get update
       - name: Install Playwright
         run: |
           cd src
