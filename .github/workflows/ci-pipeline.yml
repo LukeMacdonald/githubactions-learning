@@ -7,49 +7,63 @@ on:
     branches:
       - '*'
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
         with:
-          node-version: "18"
-      
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        run: |
-          echo Installing dependencies
-          npm install --prefix src
-      
+        run: npm ci
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: -/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint Code
+        id: lint-test
+        run: npm run test-lint --prefix src >> lint.txt
+      - name: Log Error
+        if: failure() && steps.lint-test.outcome == 'failure'
+        uses: action/upload-artifactv@3
+        with:
+          name: test-report
+          path: lint.txt
+
+  integration:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~./npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        run: npm ci
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
-      
-      - name: Perform Lint Testing
-        run: npm run test-lint --prefix src
-        continue-on-error: false
-      
-      - name: Create log file for linting
-        if: failure()
-        run: |
-          echo "Workflow Failure Log" > failure.log
-          echo "---------------------------" >> failure.log
-          echo "Date & Time of Failure: $(date)" >> failure.log
-          echo "Job: '${{ github.job }}'" >> failure.log
-          # TODO: Improve logging for step and error message
-          echo "Step: Perform Lint Testing" >> failure.log
-          echo "Error Message: Workflow failed trying to perform lint testing" >> failure.log
-      
       - name: Integration Testing
-        if: success()
-        run: npm run test-integration --prefix src
-      
-      - name: Upload log file
-        if: failure()
-        uses: actions/upload-artifact@v2
+        id: integration-test
+        run: npm run test-integration --prefix src >> integration.txt
+      - name: Log Error
+        if: failure() && steps.integration-test.outcome == 'failure'
+        uses: action/upload-artifactv@3
         with:
-          name: failure-log
-          path: failure.log
-
+          name: test-report
+          path: integration.txt
