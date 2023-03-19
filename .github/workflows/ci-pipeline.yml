@@ -110,7 +110,10 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Install Playwright
-        run: npx playwright install --with-deps --prefix src
+        run: |
+          cd src
+          npx playwright install --with-deps
+
       - name: E2E Testing
         id: e2e-test
         run: npm run test-e2e --prefix src >> e2e.txt
