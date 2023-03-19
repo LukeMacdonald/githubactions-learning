@@ -15,9 +15,10 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
 
   lint:
@@ -29,9 +30,10 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: -/.npm
+          path: node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Lint Code
         id: lint-test
@@ -52,9 +54,10 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~./npm
+          path: node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Unit Testing
         id: unit-test
@@ -75,9 +78,10 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~./npm
+          path: node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
