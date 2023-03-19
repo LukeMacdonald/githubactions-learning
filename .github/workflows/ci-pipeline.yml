@@ -60,7 +60,7 @@ jobs:
         id: unit-test
         run: npm run test-unit --prefix src >> unit.txt
       - name: Log Error
-        if: failure() && steps.integration-test.outcome == 'failure'
+        if: failure() && steps.unit-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
