@@ -116,11 +116,11 @@ jobs:
 
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
-      - name: Start server
-        run: npm run start --prefix src
       - name: E2E Testing
         id: e2e-test
-        run: npm run test-e2e --prefix src >> e2e.txt
+        run: | 
+          npm run start --prefix src 
+          npm run test-e2e --prefix src >> e2e.txt
       - name: Log Error
         if: failure() && steps.e2e-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
