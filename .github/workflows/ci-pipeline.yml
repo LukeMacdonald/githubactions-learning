@@ -38,7 +38,7 @@ jobs:
         run: npm run test-lint --prefix src >> lint.txt
       - name: Log Error
         if: failure() && steps.lint-test.outcome == 'failure'
-        uses: action/upload-artifactv@3
+        uses: action/upload-artifact@v3
         with:
           name: test-report
           path: lint.txt
@@ -63,7 +63,7 @@ jobs:
         run: npm run test-integration --prefix src >> integration.txt
       - name: Log Error
         if: failure() && steps.integration-test.outcome == 'failure'
-        uses: action/upload-artifactv@3
+        uses: action/upload-artifact@v3
         with:
           name: test-report
           path: integration.txt
