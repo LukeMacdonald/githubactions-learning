@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: unit-test-${{ github.sha }}
-          path: reports/report.xml
+          path: src/reports/report.xml
 
   integration:
     needs: setup
@@ -92,8 +92,8 @@ jobs:
         if: failure() && steps.integration-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
-          name: unit-test-${{ github.sha }}
-          path: reports/report.xml
+          name: integration-test-${{ github.sha }}
+          path: src/reports/report.xml
   e2e:
     needs: setup
     runs-on: ubuntu-latest
