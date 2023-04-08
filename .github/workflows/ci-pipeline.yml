@@ -17,8 +17,9 @@ jobs:
         with:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+          restore-keys: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm install --prefix src
 
   lint:
