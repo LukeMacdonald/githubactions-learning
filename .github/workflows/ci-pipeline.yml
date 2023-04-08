@@ -87,7 +87,7 @@ jobs:
         run: docker-compose up -d
       - name: Integration Testing
         id: integration-test
-        run: npm run test-integration --prefix src >> integration.txt
+        run: npm run test-integration --prefix src
       - name: Log Error
         if: failure() && steps.integration-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
