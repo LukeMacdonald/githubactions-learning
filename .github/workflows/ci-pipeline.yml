@@ -46,7 +46,7 @@ jobs:
           path: lint.txt
 
   unit:
-    needs: setup
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -70,7 +70,7 @@ jobs:
           path: src/reports/report.xml
 
   integration:
-    needs: setup
+    needs: unit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -95,7 +95,7 @@ jobs:
           name: integration-test-${{ github.sha }}
           path: src/reports/report.xml
   e2e:
-    needs: setup
+    needs: integration
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -129,6 +129,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
+        if: github.ref == 'refs/heads/main'
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Cache dependencies
