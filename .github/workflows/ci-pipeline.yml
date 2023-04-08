@@ -140,7 +140,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Deploy
-        run: npm pack --prefix src
+        run:  cd src && npm pack
       - uses: actions/upload-artifact@v3
         with:
           name: notes-app
