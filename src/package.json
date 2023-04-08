@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "test-lint": "eslint .",
-    "test-unit": "jest --ci tests/unit --coverage --forceExit",
+    "test-unit": "jest --ci tests/unit --coverage --coverageReporters=text-summary  --forceExit > ./reports/coverage-report.txt",
     "test-integration": "jest --ci tests/integration --coverage --forceExit",
     "test-e2e": "npx playwright test"
   },
