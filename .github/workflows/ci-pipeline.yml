@@ -61,13 +61,13 @@ jobs:
         run: npm install --prefix src
       - name: Unit Testing
         id: unit-test
-        run: npm run test-unit --prefix src >> unit.txt
+        run: npm run test-unit --prefix src
       - name: Log Error
         if: failure() && steps.unit-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
-          name: unit-report
-          path: unit.txt
+          name: unit-test-${{ github.sha }}
+          path: reports/report.xml
 
   integration:
     needs: setup
@@ -92,8 +92,8 @@ jobs:
         if: failure() && steps.integration-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
-          name: integration-report
-          path: integration.txt
+          name: unit-test-${{ github.sha }}
+          path: reports/report.xml
   e2e:
     needs: setup
     runs-on: ubuntu-latest
