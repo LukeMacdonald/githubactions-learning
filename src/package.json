@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "test-lint": "eslint . --format stylish",
-    "test-unit": "jest --ci tests/unit --coverage --forceExit >> src/coverage/unit-coverage.txt",
-    "test-integration": "jest --ci tests/integration --coverage --forceExit >> src/coverage/integration-coverage.txt",
+    "test-unit": "jest --ci tests/unit --coverage --forceExit",
+    "test-integration": "jest --ci tests/integration --coverage --forceExit",
     "test-e2e": "npx playwright test"
   },
   "keywords": [],
