@@ -106,7 +106,7 @@ jobs:
 #          name: integration-test-${{ github.sha }}
 #          path: src/reports/report.xml
   e2e:
-    needs: integration
+#    needs: integration
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
