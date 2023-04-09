@@ -183,4 +183,4 @@ E --> F
     - Inside the ***jest.config.js*** code was added to allow for a log file which exported all the output from the jest
       testing into a file which could be accessed by GitHub Actions to upload in case of a failure so that the developer
       could determine what went wrong.
-
+## Failure Scenarios
