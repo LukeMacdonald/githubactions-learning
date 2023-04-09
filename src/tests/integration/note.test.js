@@ -12,8 +12,7 @@ describe('Add Note', () => {
             .post('/')
             .send({
                 title: "[INTEGRATION TEST] New Note",
-                description: "",
-                // description: "This note was created at " + new Date(),
+                description: "This note was created at " + new Date(),
             })
 
         expect(res.statusCode).toEqual(302)
