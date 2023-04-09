@@ -46,6 +46,7 @@ jobs:
           name: lint-report
           path: lint-results.txt
   sast:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
