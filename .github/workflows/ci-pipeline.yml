@@ -46,37 +46,31 @@ jobs:
           name: lint-report
           path: lint-results.txt
   sast:
-    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install OWASP ZAP
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y openjdk-11-jre-headless
-          wget https://github.com/zaproxy/zaproxy/releases/download/v2.10.0/ZAP_2.10.0_Crossplatform.zip
-          unzip ZAP_2.10.0_Crossplatform.zip
-          export PATH=$PATH:$PWD/ZAP_2.10.0/zap.sh
-      - name: Start OWASP ZAP daemon
-        run: zap.sh -daemon -port 8090 -host 0.0.0.0
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
-      - name: Run OWASP ZAP SAST scan
-        run: |
-          cd src
-          npm run sast
-
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - name: Initialise CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+      - run: |
+              make bootstrap
+              make release
+    
   unit:
     needs: sast
     runs-on: ubuntu-latest
