@@ -38,13 +38,13 @@ jobs:
         run: npm install --prefix src
       - name: Lint Code
         id: lint-test
-        run: npm run test-lint --prefix src >> lint.txt
+        run: npm run test-lint --prefix src > lint-results.txt
       - name: Log Error
         if: failure() && steps.lint-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: lint-report
-          path: lint.txt
+          path: lint-results.txt
 
   unit:
     needs: lint
