@@ -22,91 +22,91 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
 
-#  lint:
-#    needs: setup
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Cache dependencies
-#        uses: actions/cache@v3
-#        with:
-#          path: src/node_modules
-#          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
-#      - name: Install dependencies
-#        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-#        run: npm install --prefix src
-#      - name: Lint Code
-#        id: lint-test
-#        run: npm run test-lint --prefix src > lint-results.txt
-#      - name: Log Error
-#        if: failure() && steps.lint-test.outcome == 'failure'
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: lint-report
-#          path: lint-results.txt
-#
-#  unit:
-#    needs: lint
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Cache dependencies
-#        uses: actions/cache@v3
-#        with:
-#          path: src/node_modules
-#          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
-#      - name: Install dependencies
-#        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-#        run: npm install --prefix src
-#      - name: Unit Testing
-#        id: unit-test
-#        run: npm run test-unit --prefix src > unit-coverage-report-txt
-#      - name: Upload Unit Test Coverage Report
-#        uses: actions/upload-artifact@v3
-#        with:
-#            name: unit-coverage-report
-#            path: unit-coverage-report-txt
-#      - name: Log Error
-#        if: failure() && steps.unit-test.outcome == 'failure'
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: unit-test-${{ github.sha }}
-#          path: src/reports/report.xml
-#
-#  integration:
-#    needs: unit
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Cache dependencies
-#        uses: actions/cache@v3
-#        with:
-#          path: src/node_modules
-#          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
-#      - name: Install dependencies
-#        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-#        run: npm install --prefix src
-#      - name: Run MongoDB Docker Container
-#        run: docker-compose up -d
-#      - name: Integration Testing
-#        id: integration-test
-#        run: npm run test-integration --prefix src > integration-coverage-report-txt
-#      - name: Upload Integration Test Coverage Report
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: integration-coverage-report
-#          path: integration-coverage-report-txt
-#      - name: Log Error
-#        if: failure() && steps.integration-test.outcome == 'failure'
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: integration-test-${{ github.sha }}
-#          path: src/reports/report.xml
-  e2e:
+  lint:
     needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: src/node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --prefix src
+      - name: Lint Code
+        id: lint-test
+        run: npm run test-lint --prefix src > lint-results.txt
+      - name: Log Error
+        if: failure() && steps.lint-test.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-report
+          path: lint-results.txt
+
+  unit:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: src/node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --prefix src
+      - name: Unit Testing
+        id: unit-test
+        run: npm run test-unit --prefix src > unit-coverage-report-txt
+      - name: Upload Unit Test Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+            name: unit-coverage-report
+            path: unit-coverage-report-txt
+      - name: Log Error
+        if: failure() && steps.unit-test.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit-test-${{ github.sha }}
+          path: src/reports/report.xml
+
+  integration:
+    needs: unit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: src/node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --prefix src
+      - name: Run MongoDB Docker Container
+        run: docker-compose up -d
+      - name: Integration Testing
+        id: integration-test
+        run: npm run test-integration --prefix src > integration-coverage-report-txt
+      - name: Upload Integration Test Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-coverage-report
+          path: integration-coverage-report-txt
+      - name: Log Error
+        if: failure() && steps.integration-test.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+          path: src/reports/report.xml
+  e2e:
+    needs: integration
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -130,30 +130,30 @@ jobs:
         id: e2e-test
         run: npm run test-e2e --prefix src
       - name: Log Error
-#        if: failure() && steps.e2e-test.outcome == 'failure'
+        if: failure() && steps.e2e-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: e2e-report
           path: src/playwright-report/index.html
-#  deploy:
-#    needs: [setup,lint,unit,integration,e2e]
-#    runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/main'
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#      - name: Cache dependencies
-#        uses: actions/cache@v3
-#        with:
-#          path: src/node_modules
-#          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
-#      - name: Install dependencies
-#        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-#        run: npm install --prefix src
-#      - name: Deploy
-#        run:  cd src && npm pack
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: notes-app
-#          path: src/notes-1.0.0.tgz
+  deploy:
+    needs: [setup,lint,unit,integration,e2e]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: src/node_modules
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --prefix src
+      - name: Deploy
+        run:  cd src && npm pack
+      - uses: actions/upload-artifact@v3
+        with:
+          name: notes-app
+          path: src/notes-1.0.0.tgz
