@@ -58,15 +58,11 @@ jobs:
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+      - name: nodejsscan scan
+        id: njsscan
+        uses: ajinabraham/njsscan-action@master
         with:
-          languages: javascript
-      - run: |
-              make bootstrap
-              make release
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+          args: '.'
     
   unit:
     needs: sast
