@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
             name: unit-coverage-report
-            path: src/coverage/lcov-report
+            path: src/coverage/unit-coverage.txt
       - name: Log Error
         if: failure() && steps.unit-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
@@ -98,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: integration-coverage-report
-          path: src/coverage/lcov-report
+          path: src/coverage/integration-coverage.txt
       - name: Log Error
         if: failure() && steps.integration-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
