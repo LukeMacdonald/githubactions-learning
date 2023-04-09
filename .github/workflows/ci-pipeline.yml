@@ -135,25 +135,25 @@ jobs:
         with:
           name: e2e-report
           path: src/playwright-report/index.html
-  deploy:
-    needs: [setup,lint,unit,integration,e2e]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: src/node_modules
-          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
-      - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install --prefix src
-      - name: Deploy
-        run:  cd src && npm pack
-      - uses: actions/upload-artifact@v3
-        with:
-          name: notes-app
-          path: src/notes-1.0.0.tgz
+#  deploy:
+#    needs: [setup,lint,unit,integration,e2e]
+#    runs-on: ubuntu-latest
+#    if: github.ref == 'refs/heads/main'
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - uses: actions/setup-node@v3
+#      - name: Cache dependencies
+#        uses: actions/cache@v3
+#        with:
+#          path: src/node_modules
+#          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+#      - name: Install dependencies
+#        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+#        run: npm install --prefix src
+#      - name: Deploy
+#        run:  cd src && npm pack
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: notes-app
+#          path: src/notes-1.0.0.tgz
