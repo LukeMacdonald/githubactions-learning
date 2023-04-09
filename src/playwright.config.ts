@@ -79,7 +79,7 @@ const config: PlaywrightTestConfig = {
     // },
   ],
   /* Retry on CI only */
-  reporter: 'list',
+  reporter: 'html',
   /* Opt out of parallel tests on CI. */
   retries: process.env.CI ? 2 : 0,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */

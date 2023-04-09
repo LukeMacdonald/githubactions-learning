@@ -27,7 +27,7 @@ test('test', async ({ page }) => {
   await expect(page).toHaveURL('http://localhost:3000/');
 
   // Click text=Delete
-  // await page.locator('text=Delete').click();
+  await page.locator('text=Delete').click();
   await expect(page).toHaveURL('http://localhost:3000/');
 
 });

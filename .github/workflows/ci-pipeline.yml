@@ -17,8 +17,9 @@ jobs:
         with:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
+          restore-keys: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
 
   lint:
@@ -33,17 +34,17 @@ jobs:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Lint Code
         id: lint-test
-        run: npm run test-lint --prefix src >> lint.txt
+        run: npm run test-lint --prefix src > lint-results.txt
       - name: Log Error
         if: failure() && steps.lint-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: lint-report
-          path: lint.txt
+          path: lint-results.txt
 
   unit:
     needs: lint
@@ -57,11 +58,16 @@ jobs:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Unit Testing
         id: unit-test
-        run: npm run test-unit --prefix src
+        run: npm run test-unit --prefix src > unit-coverage-report-txt
+      - name: Upload Unit Test Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+            name: unit-coverage-report
+            path: unit-coverage-report-txt
       - name: Log Error
         if: failure() && steps.unit-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
@@ -81,13 +87,18 @@ jobs:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Run MongoDB Docker Container
         run: docker-compose up -d
       - name: Integration Testing
         id: integration-test
-        run: npm run test-integration --prefix src
+        run: npm run test-integration --prefix src > integration-coverage-report-txt
+      - name: Upload Integration Test Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-coverage-report
+          path: integration-coverage-report-txt
       - name: Log Error
         if: failure() && steps.integration-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
@@ -117,19 +128,19 @@ jobs:
         run: docker-compose up -d
       - name: E2E Testing
         id: e2e-test
-        run: npm run test-e2e --prefix src >> e2e.txt
+        run: npm run test-e2e --prefix src
       - name: Log Error
         if: failure() && steps.e2e-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: e2e-report
-          path: e2e.txt
+          path: src/playwright-report/index.html
   deploy:
     needs: [setup,lint,unit,integration,e2e]
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
-        if: github.ref == 'refs/heads/main'
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Cache dependencies
@@ -138,7 +149,7 @@ jobs:
           path: src/node_modules
           key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
       - name: Deploy
         run:  cd src && npm pack
@@ -146,4 +157,3 @@ jobs:
         with:
           name: notes-app
           path: src/notes-1.0.0.tgz
-
