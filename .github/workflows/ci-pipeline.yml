@@ -134,7 +134,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: e2e-report
-          path: e2e.txt
+          path: src/playwright-report/index.html
   deploy:
     needs: [setup,lint,unit,integration,e2e]
     runs-on: ubuntu-latest
