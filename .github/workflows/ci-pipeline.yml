@@ -58,11 +58,6 @@ jobs:
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix src
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-      - name: Initialise CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
@@ -70,6 +65,8 @@ jobs:
       - run: |
               make bootstrap
               make release
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
     
   unit:
     needs: sast
