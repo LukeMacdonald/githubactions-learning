@@ -14,7 +14,7 @@ describe('mockingoose', () => {
             const todo = new Note({
                 title: "Task Note",
                 description:"",
-                // description: "This is a new note" // "This can't be blank"
+                description: "This is a new note" // "This can't be blank"
             });
 
             const result = await todo.validateSync();
