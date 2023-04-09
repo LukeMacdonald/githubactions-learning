@@ -128,7 +128,7 @@ jobs:
         run: docker-compose up -d
       - name: E2E Testing
         id: e2e-test
-        run: npm run test-e2e --prefix src >> e2e.txt
+        run: npm run test-e2e --prefix src
       - name: Log Error
         if: failure() && steps.e2e-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
@@ -157,4 +157,3 @@ jobs:
         with:
           name: notes-app
           path: src/notes-1.0.0.tgz
-
